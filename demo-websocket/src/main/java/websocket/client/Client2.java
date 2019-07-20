@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class Client {
+public class Client2 {
     private final static String URL = "ws://127.0.0.1:8080/server";
     private final static CountDownLatch LATCH = new CountDownLatch(1);
 
@@ -27,21 +27,7 @@ public class Client {
         Future<StompSession> future = stompClient.connect(URL, new SessionHandler());
         try {
             StompSession session = future.get();
-            // 订阅topic
-            session.subscribe("/topic/install1", new StompFrameHandler() {
-                @Override
-                public Type getPayloadType(StompHeaders headers) {
-                    return String.class;
-                }
-
-                @Override
-                public void handleFrame(StompHeaders headers, Object payload) {
-                    System.out.println(payload);
-                }
-            });
-
-//            session.send("/topic/install", "hello");
-
+            session.send("/api/trade", "hello");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
