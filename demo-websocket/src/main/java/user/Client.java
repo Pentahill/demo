@@ -1,4 +1,4 @@
-package websocket.client;
+package user;
 
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -8,6 +8,7 @@ import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import websocket.client.SessionHandler;
 
 import java.lang.reflect.Type;
 import java.util.concurrent.CountDownLatch;
@@ -28,20 +29,19 @@ public class Client {
         try {
             StompSession session = future.get();
             // 订阅topic
-            session.setAutoReceipt(true);
-            session.subscribe("/topic/install1", new StompFrameHandler() {
+            session.subscribe("/user/queue/position-updates", new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
+                    System.out.println("getPayloadType");
                     return String.class;
                 }
 
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
+                    System.out.println("handleFrame");
                     System.out.println(payload);
                 }
             });
-
-//            session.send("/topic/install", "hello");
 
         } catch (InterruptedException e) {
             e.printStackTrace();

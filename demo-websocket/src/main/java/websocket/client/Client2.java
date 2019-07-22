@@ -27,6 +27,19 @@ public class Client2 {
         Future<StompSession> future = stompClient.connect(URL, new SessionHandler());
         try {
             StompSession session = future.get();
+            session.subscribe("/topic/trade", new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    System.out.println("get Payload Type");
+                    return String.class;
+                }
+
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    System.out.println("handle frame");
+                }
+            });
+
             session.send("/api/trade", "hello");
         } catch (InterruptedException e) {
             e.printStackTrace();
